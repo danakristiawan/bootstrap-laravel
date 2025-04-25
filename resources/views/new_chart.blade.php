@@ -78,73 +78,11 @@
             </div>
             <div class="row mt-3">
                 <div class="row">
-                    <div class="col-lg-9">
-                        <div>
-                            <canvas id="myChart-1"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div>
-                            <canvas id="myChart-2"></canvas>
-                        </div>
+                    <div class="col">
+                        <x-chartjs-component :chart="$chart" />
                     </div>
                 </div>
             </div>
-
-            <script type="module">
-                const ctx1 = document.getElementById("myChart-1");
-
-                new Chart(ctx1, {
-                    type: "bar",
-                    data: {
-                        labels: @json($data->map(fn ($data) => $data->date)),
-                        datasets: [
-                            {
-                                label: "# of Votes",
-                                data: @json($data->map(fn ($data) => $data->aggregate)),
-                                borderWidth: 1,
-                            },
-                        ],
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                            },
-                        },
-                    },
-                });
-
-                const ctx2 = document.getElementById("myChart-2");
-
-                new Chart(ctx2, {
-                    type: "line",
-                    data: {
-                        labels: [
-                            "Red",
-                            "Blue",
-                            "Yellow",
-                            "Green",
-                            "Purple",
-                            "Orange",
-                        ],
-                        datasets: [
-                            {
-                                label: "# of Votes",
-                                data: [12, 19, 31, 7, 21, 19],
-                                borderWidth: 1,
-                            },
-                        ],
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                            },
-                        },
-                    },
-                });
-            </script>
         </div>
     </body>
 </html>
