@@ -8,3 +8,6 @@ window.bootstrap = bootstrap;
 // Import ChartJS
 import Chart from "chart.js/auto";
 window.Chart = Chart;
+
+// Import datatable
+import "laravel-datatables-vite";

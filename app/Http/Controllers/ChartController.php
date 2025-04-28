@@ -14,30 +14,21 @@ class ChartController extends Controller
         ->groupBy('date')
         ->get();
         
-        // dd($data->map(fn ($data) => $data->date);
-
         $chart = Chartjs::build()
          ->name('barChartTest')
          ->type('bar')
          ->size(['width' => 400, 'height' => 200])
-        //  ->labels($data->map(fn ($data) => $data->date))
-         ->labels(['s','s','s','s','s','s'])
+         ->labels($data->map(fn ($data) => $data->date)->toArray())
          ->datasets([
              [
                  "label" => "My First dataset",
-                 'data' => $data->map(fn ($data) => $data->aggregate)
-             ]
+                 'data' => $data->map(fn ($data) => $data->aggregate)->toArray()
+             ],
+             [
+                 "label" => "My First dataset",
+                 'data' => $data->map(fn ($data) => $data->aggregate)->toArray()
+             ],
          ])
-        //  ->datasets([
-        //      [
-        //          "label" => "My First dataset",
-        //          'data' => [23,34,46,44,46,2]
-        //      ],
-        //      [
-        //          "label" => "My Second dataset",
-        //          'data' => [67,4,32,67,89,43]
-        //      ]
-        //  ])
          ->options([
             "scales" => [
                 "y" => [
