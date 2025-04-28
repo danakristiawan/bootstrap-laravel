@@ -4,6 +4,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\FlightsController;
+use App\Http\Controllers\NewUsersController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,3 +25,5 @@ Route::get('/chart', function () {
 Route::get('/newchart', [ChartController::class, 'index']);
 
 Route::resource('users', App\Http\Controllers\UsersController::class);
+
+Route::resource('flights',FlightsController::class);
