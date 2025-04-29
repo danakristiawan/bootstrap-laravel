@@ -37,7 +37,7 @@ class FlightsController extends Controller
      */
     public function show(Flight $flight)
     {
-        //
+        return response()->json($flight);
     }
 
     /**
@@ -61,6 +61,8 @@ class FlightsController extends Controller
      */
     public function destroy(Flight $flight)
     {
-        //
+        $flight->delete();
+
+        return response()->json(['success' => 'Data has been deleted successfully!']);
     }
 }

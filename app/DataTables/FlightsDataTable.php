@@ -53,16 +53,7 @@ class FlightsDataTable extends DataTable
                     ->setTableId('flights-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(0)
-                    ->selectStyleSingle()
-                    ->buttons([
-                        Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
-                    ]);
+                    ->orderBy(0);
     }
 
     /**

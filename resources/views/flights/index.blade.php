@@ -1,26 +1,74 @@
-@extends('layouts.app') @section('content')
+@extends('flights.app') @section('content')
 
 <div class="row mt-3">
     <div class="col">
-        <div class="toast-container position-fixed top-0 end-0 p-3">
-            <div
-                id="liveToast"
-                class="toast"
-                role="alert"
-                aria-live="assertive"
-                aria-atomic="true"
-            >
-                <div class="toast-header text-bg-primary">
-                    <strong class="me-auto">Success</strong>
-                    <small>just now</small>
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="toast"
-                        aria-label="Close"
-                    ></button>
+        <div
+            class="modal fade"
+            id="myModal"
+            tabindex="-1"
+            aria-labelledby="myModalLabel"
+        >
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form action="" method="" id="myForm">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="myModalLabel">
+                                Modal title
+                            </h1>
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3" id="errorList"></div>
+                            <input type="hidden" name="id" id="id" value="" />
+                            <div class="mb-3">
+                                <label for="name" class="form-label"
+                                    >Name</label
+                                >
+                                <input
+                                    type="text"
+                                    name="name"
+                                    class="form-control"
+                                    id="name"
+                                    value=""
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label"
+                                    >Email</label
+                                >
+                                <input
+                                    type="email"
+                                    name="email"
+                                    class="form-control"
+                                    id="email"
+                                    value=""
+                                />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                                id="btnTutup"
+                            >
+                                Tutup
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                id="btnSimpan"
+                            >
+                                Simpan
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="toast-body">{{ session("success") }}</div>
             </div>
         </div>
     </div>
@@ -44,6 +92,114 @@
     </div>
 </div>
 
-@endsection @push('scripts')
+@endsection @push('js')
+<script type="module">
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+    });
+    $("body").on("click", "#detail", function () {
+        let id = $(this).data("id");
+        $.get("{{ route('flights.index') }}" + "/" + id, function (data) {
+            console.log(data);
+            $("#name").val(data.name);
+            $("#email").val(data.email);
+            $("#myModalLabel").html("Detail");
+            $("#btnSimpan").hide();
+            $("#errorList").html("");
+        });
+    });
+    $("body").on("click", "#hapus", function () {
+        var id = $(this).data("id");
+        console.log(id);
+        if (confirm("Are you sure you want to delete?")) {
+            $.ajax({
+                type: "DELETE",
+                url: "{{ route('flights.store') }}" + "/" + id,
+                success: function (data) {
+                    console.log("Success:", data);
+                    window.LaravelDataTables["flights-table"].ajax.reload();
+                    toastr.success("Data has been deleted successfully!");
+                },
+                error: function (data) {
+                    console.log("Error:", data);
+                },
+            });
+        }
+    });
+    $("body").on("click", "#rekam", function () {
+        $("#myForm").trigger("reset");
+        $("#myModalLabel").html("Rekam");
+        $("#btnSimpan").html("Simpan");
+        $("#btnSimpan").show();
+        $("#errorList").html("");
+    });
+
+    $("body").on("click", "#ubah", function () {
+        const id = $(this).data("id");
+        $.get("{{ route('flights.index') }}" + "/" + id, function (data) {
+            $("#id").val(data.id);
+            $("#name").val(data.name);
+            $("#email").val(data.email);
+            $("#myModalLabel").html("Ubah");
+            $("#btnSimpan").html("Ubah");
+            $("#btnSimpan").show();
+            $("#errorList").html("");
+        });
+    });
+    $("body").on("click", "#btnSimpan", function (e) {
+        const id = $("#id").val();
+        e.preventDefault();
+        if ($(this).html() == "Simpan") {
+            $.ajax({
+                data: $("#myForm").serialize(),
+                url: "{{ route('flights.store') }}",
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    $("#myForm").trigger("reset");
+                    $("#btnTutup").click();
+                    table.draw();
+                    toastr.success("Data has been created successfully!");
+                },
+                error: function (data) {
+                    console.log(data.responseJSON.errors);
+                    var data = data.responseJSON.errors;
+                    errorsHtml = '<div class="alert alert-danger"><ul>';
+                    $.each(data, function (key, value) {
+                        errorsHtml += "<li>" + value[0] + "</li>";
+                    });
+                    errorsHtml += "</ul></di>";
+                    $("#errorList").html(errorsHtml);
+                },
+            });
+        } else {
+            $.ajax({
+                data: $("#myForm").serialize(),
+                url: "{{ route('flights.index') }}" + "/" + id,
+                type: "PUT",
+                dataType: "json",
+                success: function (data) {
+                    $("#myForm").trigger("reset");
+                    $("#btnTutup").click();
+                    table.draw();
+                    toastr.success("Data has been updated successfully!");
+                },
+                error: function (data) {
+                    console.log(data.responseJSON.errors);
+                    const err = data.responseJSON.errors;
+                    errorsHtml = '<div class="alert alert-danger"><ul>';
+                    $.each(err, function (key, value) {
+                        errorsHtml += "<li>" + value[0] + "</li>";
+                    });
+                    errorsHtml += "</ul></di>";
+                    $("#errorList").html(errorsHtml);
+                },
+            });
+        }
+    });
+</script>
+@endpush @push('scripts')
 {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 @endpush

@@ -11,3 +11,11 @@ window.Chart = Chart;
 
 // Import datatable
 import "laravel-datatables-vite";
+
+// Toastr
+import toastr from "toastr";
+window.toastr = toastr;
+window.toastr.options = {
+    progressBar: true,
+    showDuration: "100",
+};
