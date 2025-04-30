@@ -45,7 +45,7 @@ class UsersDataTable extends DataTable
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->orderBy(0)
-                     ->addTableClass('table-bordered table-sm table-hover');
+                    ->addTableClass('table-bordered table-sm table-hover');
     }
 
     /**

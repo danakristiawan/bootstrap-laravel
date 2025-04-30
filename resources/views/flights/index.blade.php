@@ -73,16 +73,24 @@
         </div>
     </div>
 </div>
-
 <div class="row mt-3">
     <div class="col">
         <h1 class="text-center">Contoh Halaman Data Flight Tabel</h1>
     </div>
 </div>
-
 <div class="row mt-3">
     <div class="col">
         <div class="card">
+            <div class="card-header">
+                <a
+                    href="javascript:void(0)"
+                    class="btn btn-sm btn-outline-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                    id="rekam"
+                    >Rekam</a
+                >
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     {{ $dataTable->table() }}
@@ -104,7 +112,9 @@
         $.get("{{ route('flights.index') }}" + "/" + id, function (data) {
             console.log(data);
             $("#name").val(data.name);
+            $("#name").prop("disabled", true);
             $("#email").val(data.email);
+            $("#email").prop("disabled", true);
             $("#myModalLabel").html("Detail");
             $("#btnSimpan").hide();
             $("#errorList").html("");
@@ -134,6 +144,8 @@
         $("#btnSimpan").html("Simpan");
         $("#btnSimpan").show();
         $("#errorList").html("");
+        $("#name").prop("disabled", false);
+        $("#email").prop("disabled", false);
     });
 
     $("body").on("click", "#ubah", function () {
@@ -146,6 +158,8 @@
             $("#btnSimpan").html("Ubah");
             $("#btnSimpan").show();
             $("#errorList").html("");
+            $("#name").prop("disabled", false);
+            $("#email").prop("disabled", false);
         });
     });
     $("body").on("click", "#btnSimpan", function (e) {
@@ -160,17 +174,19 @@
                 success: function (data) {
                     $("#myForm").trigger("reset");
                     $("#btnTutup").click();
-                    table.draw();
+                    window.LaravelDataTables["flights-table"].ajax.reload();
                     toastr.success("Data has been created successfully!");
                 },
                 error: function (data) {
                     console.log(data.responseJSON.errors);
-                    var data = data.responseJSON.errors;
-                    errorsHtml = '<div class="alert alert-danger"><ul>';
-                    $.each(data, function (key, value) {
-                        errorsHtml += "<li>" + value[0] + "</li>";
+                    let err = data.responseJSON.errors;
+                    let errorsHtml = "";
+                    $.each(err, function (key, value) {
+                        errorsHtml +=
+                            '<div class="alert alert-danger" role="alert">' +
+                            value[0] +
+                            "</div>";
                     });
-                    errorsHtml += "</ul></di>";
                     $("#errorList").html(errorsHtml);
                 },
             });
@@ -183,17 +199,19 @@
                 success: function (data) {
                     $("#myForm").trigger("reset");
                     $("#btnTutup").click();
-                    table.draw();
+                    window.LaravelDataTables["flights-table"].ajax.reload();
                     toastr.success("Data has been updated successfully!");
                 },
                 error: function (data) {
                     console.log(data.responseJSON.errors);
-                    const err = data.responseJSON.errors;
-                    errorsHtml = '<div class="alert alert-danger"><ul>';
+                    let err = data.responseJSON.errors;
+                    let errorsHtml = "";
                     $.each(err, function (key, value) {
-                        errorsHtml += "<li>" + value[0] + "</li>";
+                        errorsHtml +=
+                            '<div class="alert alert-danger" role="alert">' +
+                            value[0] +
+                            "</div>";
                     });
-                    errorsHtml += "</ul></di>";
                     $("#errorList").html(errorsHtml);
                 },
             });

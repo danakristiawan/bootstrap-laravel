@@ -17,19 +17,13 @@ class FlightsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate($this->validation());
+        Flight::create($request->all());
+        return response()->json(['success' => 'Data has been created successfully!']);
     }
 
     /**
@@ -41,19 +35,13 @@ class FlightsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Flight $flight)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Flight $flight)
     {
-        //
+        $request->validate($this->validation());
+        $flight->fill($request->post())->save();
+        return response()->json(['success' => 'Data has been updated successfully!']);
     }
 
     /**
@@ -62,7 +50,17 @@ class FlightsController extends Controller
     public function destroy(Flight $flight)
     {
         $flight->delete();
-
         return response()->json(['success' => 'Data has been deleted successfully!']);
+    }
+
+    /**
+     * Validation the specified resource.
+     */
+    public function validation()
+    {
+        return [
+            'name' => 'required',
+            'email' => 'required',
+        ];
     }
 }

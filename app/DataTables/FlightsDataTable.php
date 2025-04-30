@@ -23,10 +23,11 @@ class FlightsDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addColumn('action', function($row){
-                        $detail = '<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#myModal" data-id="'.$row->id.'" class="btn btn-primary btn-sm" id="detail">Detail</a>';
-                        $ubah = '<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#myModal" data-id="'.$row->id.'" class="btn btn-primary btn-sm ms-1" id="ubah">Ubah</a>';
-                        $hapus = ' <a href="javascript:void(0)" data-id="'.$row->id.'" class="btn btn-primary btn-sm" id="hapus">Hapus</a>';
-                        $button = $detail.$ubah.$hapus;
+                        $detail = '<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#myModal" data-id="'.$row->id.'" class="btn btn-outline-primary btn-sm" id="detail">Detail</a>';
+                        $ubah = '<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#myModal" data-id="'.$row->id.'" class="btn btn-outline-primary btn-sm" id="ubah">Ubah</a>';
+                        $hapus = ' <a href="javascript:void(0)" data-id="'.$row->id.'" class="btn btn-outline-primary btn-sm" id="hapus">Hapus</a>';
+                        // $btn = '<div class="btn-group" role="group" aria-label="Basic example">'
+                        $button = '<div class="btn-group" role="group" aria-label="Basic example">'.$detail.$ubah.$hapus.'</div>';
                         return $button;
                     })
         
@@ -53,6 +54,7 @@ class FlightsDataTable extends DataTable
                     ->setTableId('flights-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
+                    ->addTableClass('table-bordered table-sm table-hover')
                     ->orderBy(0);
     }
 
