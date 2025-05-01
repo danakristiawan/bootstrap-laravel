@@ -12,11 +12,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Flight::factory(1000)->create();
+        // Flight::factory(1000)->create();
 
         // User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        $this->call([
+            CreateAdminUserSeeder::class,
+            PermissionTableSeeder::class,
+        ]);
     }
 }

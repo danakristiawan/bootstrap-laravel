@@ -27,3 +27,5 @@ Route::get('/newchart', [ChartController::class, 'index']);
 Route::resource('users', App\Http\Controllers\UsersController::class);
 
 Route::resource('flights',FlightsController::class);
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
