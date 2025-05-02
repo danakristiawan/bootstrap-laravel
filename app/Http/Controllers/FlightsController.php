@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Flight;
 use Illuminate\Http\Request;
 use App\DataTables\FlightsDataTable;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
 class FlightsController extends Controller
 {
+
+    
     /**
      * Display a listing of the resource.
      */

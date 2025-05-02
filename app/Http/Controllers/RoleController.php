@@ -3,29 +3,33 @@
 namespace App\Http\Controllers;
 
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use DB;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
     
 class RoleController extends Controller
+// class RoleController extends Controller implements HasMiddleware
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Get the middleware that should be assigned to the controller.
      */
-    function __construct()
-    {
-         $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','store']]);
-         $this->middleware('permission:role-create', ['only' => ['create','store']]);
-         $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:role-delete', ['only' => ['destroy']]);
-    }
-    
+    // public static function middleware(): array
+    // {
+    //     return [
+    //         'auth',
+    //         new Middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','store']]),
+    //         new Middleware('permission:role-create', ['only' => ['create','store']]),
+    //         new Middleware('permission:role-edit', ['only' => ['edit','update']]),
+    //         new Middleware('permission:role-delete', ['only' => ['destroy']]),
+    //     ];
+    // }
+
     /**
      * Display a listing of the resource.
      *
@@ -57,7 +61,7 @@ class RoleController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $this->validate($request, [
+        $request->validate([
             'name' => 'required|unique:roles,name',
             'permission' => 'required',
         ]);
@@ -115,7 +119,12 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id): RedirectResponse
     {
-        $this->validate($request, [
+        // $this->validate($request, [
+        //     'name' => 'required',
+        //     'permission' => 'required',
+        // ]);
+
+        $request->validate([
             'name' => 'required',
             'permission' => 'required',
         ]);
